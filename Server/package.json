@@ -1,0 +1,20 @@
+{
+    "name": "url-shortener",
+    "version": "1.0.0",
+    "description": "A url shortener service created using nodejs",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "express": "^4.19.2",
+      "mongodb": "^6.5.0"
+    },
+    "devDependencies": {
+      "dotenv": "^16.4.5"
+    }
+}
+  
