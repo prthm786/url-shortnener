@@ -14,15 +14,23 @@ function generateUrl() {
     return result;
 }
 
+// function that is used when the the server needs to redirect 
+// from the shorturl to actual url
 async function searchUrl(shorturl) {
 
     if(!shorturl) return "Url is required";
     
     try {
+        // using the db object to connect to mongodb 
         const db = await connectToMongoDB();
+
+        // accessing 'url' collections 
         const collection = db.collection('url');
+
+        // finding a url object if exists in db 
         const cursor = await collection.findOne({ shorturl })
     
+        // if found return the actual url 
         if(cursor !== null) {
             return cursor.url;
         }
@@ -44,19 +52,30 @@ async function chkUrl(url, collection) {
         return false // url already exists in db
 }
 
+// function is used when /shorten route is called 
+// this function actually creates the shorturl and stores it in the database 
 async function storeUrl(url) {
 
     try {
+        // using the db object to connect to mongodb 
         const db = await connectToMongoDB();
+
+        // accessing 'url' collections 
         const collection = db.collection('url');
+
+        // finding a url object if exists in db 
         const cursor = await collection.findOne({ url })
         
+        // if found return the shortUrl 
         if(cursor !== null) {
             return cursor.shorturl;
         }
+        // if not found create a short url, store it in the db and 
+        // return newly created the shortUrl
         else {    
             let shortUrl = generateUrl();
 
+            // checking the uniqueness of the shortUrl 
             while(await chkUrl(shortUrl, collection) === false) {
                 shortUrl = generateUrl();
             }
@@ -64,8 +83,9 @@ async function storeUrl(url) {
             const data = {
                 "url": url,
                 "shorturl": shortUrl
-            }
+            } 
 
+            // storing the data object (url and shortUrl) in db
             const result = await collection.insertOne(data);
             // console.log('Document inserted:', result.insertedId);
 

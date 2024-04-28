@@ -2,13 +2,13 @@ const express = require("express")
 const { readFile } = require("fs")
 require("dotenv").config()
 
+// Importing the util functions
 const { storeUrl, searchUrl } = require("./utils")
 
 const app = express()
-
 const port = process.env.PORT
-// const localhost = "127.0.0.1"
 
+// Setting up middlewares to be able to read `req.body`
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -65,12 +65,12 @@ app.post('/shorten', async (req, res) => {
     
     if (!url) {
         return res.status(400).json({ error: 'Missing url' });
-    }    
+    }
+
     const shortUrl = await storeUrl(url);
     res.json(`${process.env.BASE_URL}/${shortUrl}`);
 });
 
-// Route to redirect shortened URLs
 app.get('/:shortUrl', async (req, res) => {
     const { shortUrl } = req.params;
 
