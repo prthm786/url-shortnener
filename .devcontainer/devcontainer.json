@@ -1,0 +1,18 @@
+{
+    "image": "mcr.microsoft.com/devcontainers/universal:2",
+    "features": {
+    },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-azuretools.vscode-docker",
+                "GitHub.codespaces",                
+                "ms-vscode-remote.remote-containers"
+            ]
+        }
+    },
+    "hostRequirements": {
+        "memory": "16gb",
+        "cpus": 4
+    }
+}
