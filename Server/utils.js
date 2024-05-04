@@ -1,4 +1,4 @@
-const { connectToMongoDB } = require("./database")
+const { getDatabase } = require("./database")
 
 // function that uses a-z, A-Z, 0-9, 
 // &, -, _, +, to create a string from 5 char to 13 chars in length
@@ -18,38 +18,31 @@ function generateUrl() {
 // from the shorturl to actual url
 async function searchUrl(shorturl) {
 
-    if(!shorturl) return "Url is required";
-    
-    try {
-        // using the db object to connect to mongodb 
-        const db = await connectToMongoDB();
+    if (!shorturl) {
+        throw new Error("Url is required");
+    }
 
-        // accessing 'url' collections 
+    try {
+        // getting the db object  
+        const db = getDatabase();
+
+        // getting 'url' collections 
         const collection = db.collection('url');
 
         // finding a url object if exists in db 
-        const cursor = await collection.findOne({ shorturl })
+        const result = await collection.findOne({ shorturl });
     
         // if found return the actual url 
-        if(cursor !== null) {
-            return cursor.url;
+        if(result !== null) {
+            return result.url;
         }
         else {
             return "Not Found";
         }
     } catch (error) {
         console.error(error);
-        return null
+        return null;
     }
-}
-
-async function chkUrl(url, collection) {
-    const foundurl = await collection.findOne({ url })
-
-    if(foundurl == null) 
-        return true // url is not in db
-    else 
-        return false // url already exists in db
 }
 
 // function is used when /shorten route is called 
@@ -57,43 +50,44 @@ async function chkUrl(url, collection) {
 async function storeUrl(url) {
 
     try {
-        // using the db object to connect to mongodb 
-        const db = await connectToMongoDB();
+        const db = getDatabase();
 
         // accessing 'url' collections 
         const collection = db.collection('url');
 
         // finding a url object if exists in db 
-        const cursor = await collection.findOne({ url })
+        const existingUrl = await collection.findOne({ url });
         
         // if found return the shortUrl 
-        if(cursor !== null) {
-            return cursor.shorturl;
+        if(existingUrl !== null) {
+            return existingUrl.shorturl;
         }
         // if not found create a short url, store it in the db and 
         // return newly created the shortUrl
-        else {    
-            let shortUrl = generateUrl();
 
-            // checking the uniqueness of the shortUrl 
-            while(await chkUrl(shortUrl, collection) === false) {
-                shortUrl = generateUrl();
-            }
-
-            const data = {
-                "url": url,
-                "shorturl": shortUrl
-            } 
-
-            // storing the data object (url and shortUrl) in db
-            const result = await collection.insertOne(data);
-            // console.log('Document inserted:', result.insertedId);
-
-            return shortUrl;
+        // // checking the uniqueness of the shortUrl         
+        let shortUrl;
+        let uniqueShortUrl = false;
+        while (!uniqueShortUrl) {
+            shortUrl = generateUrl();
+            const existingShortUrl = await collection.findOne({ shorturl: shortUrl });
+            uniqueShortUrl = !existingShortUrl;
         }
+
+        const data = {
+            "url": url,
+            "shorturl": shortUrl
+        } 
+
+        // storing the data object (url and shortUrl) in db
+        const result = await collection.insertOne(data);
+        // console.log('Document inserted:', result.insertedId);
+
+        return shortUrl;
+
     } catch (error) {
         console.error(error);
-        return null
+        return null;
     }
 }
 
