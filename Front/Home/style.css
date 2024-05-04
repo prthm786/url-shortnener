@@ -35,8 +35,9 @@ form input {
     width: 300px;
 }
 
-form button {
+form button, #container button {
     color: antiquewhite;
+    cursor: pointer;
     background-color: rgb(16, 50, 50);
     padding: 5px 10px;
     border: none;
@@ -49,6 +50,8 @@ main #container {
     display: flex;
     flex-direction: column;
     font-size: 1.1rem;
+    justify-content: center;
+    align-items: center;
 }
 
 #container a {
@@ -57,4 +60,24 @@ main #container {
     text-decoration: none;
     font-weight: bold;
     font-size: 1.5rem;
+}
+
+#container div {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+}
+
+#container button {
+    width: 40px;
+    /* height: 30px; */
+}
+
+#container button svg {
+    /* height: 10px; */
+    fill: white;
+    width: 20px;
+    height: 20px;
+    
 }
