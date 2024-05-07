@@ -18,18 +18,12 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=root
       - MONGO_INITDB_ROOT_PASSWORD=passnojsmgdb
     networks:
-      net:
-        ipv4_address: 192.168.16.2
+      - net
     volumes:
       - vol:/data/db
 
 networks:
   net:  
-    driver: bridge
-    ipam: 
-      driver: default
-      config:
-        - subnet: 192.168.16.0/24  
 
 volumes:
   vol:
