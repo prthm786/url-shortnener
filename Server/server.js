@@ -1,5 +1,5 @@
 const express = require("express");
-const { readFile } = require("fs");
+const { readFile } = require("fs").promises;
 require("dotenv").config();
 
 const { connect } = require("./database");
@@ -18,52 +18,48 @@ const port = process.env.PORT;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", function (req, res) {
-    readFile("../Front/Home/index.html", "utf8", (err, data) => {
-        if (err) {
-            // console.error(err);
-            res.status(500).send("Internal Server Error");
-        } else {
-            res.type("html");
-            res.send(data);
-        }
-    })
+app.get("/", async function (req, res) {
+    try {
+        const data = await readFile("../Front/Home/index.html", "utf8");
+        res.type("html");
+        res.send(data);
+    } catch(err) {
+        console.error(err);
+        res.status(500).send("Internal Server Error");
+    }
 })
 
-app.get("/home", function (req, res) {
-    readFile("../Front/Home/index.html", "utf8", (err, data) => {
-        if (err) {
-            // console.error(err);
-            res.status(500).send("Internal Server Error");
-        } else {
-            res.type("html");
-            res.send(data);
-        }
-    })
+app.get("/home", async function (req, res) {
+    try {
+        const data = await readFile("../Front/Home/index.html", "utf8");
+        res.type("html");
+        res.send(data);
+    } catch(err) {
+        console.error(err);
+        res.status(500).send("Internal Server Error");
+    }
 })
 
-app.get("/home/style", function (req, res) {
-    readFile("../Front/Home/style.css", "utf8", (err, data) => {
-        if (err) {
-            // console.error(err);
-            res.status(500).send("Internal Server Error");
-        } else {
+app.get("/home/style", async function (req, res) {
+    try {
+        const data = await readFile("../Front/Home/style.css", "utf8");
             res.type("css");
-            res.send(data);
-        }
-    })
+        res.send(data);
+    } catch(err) {
+        console.error(err);
+        res.status(500).send("Internal Server Error");
+    }
 })
 
-app.get("/home/script", function (req, res) {
-    readFile("../Front/Home/script.js", "utf8", (err, data) => {
-        if (err) {
-            // console.error(err);
-            res.status(500).send("Internal Server Error");
-        } else {
-            res.type("text/javascript");
-            res.send(data);
-        }
-    })
+app.get("/home/script", async function (req, res) {
+    try {
+        const data = await readFile("../Front/Home/script.js", "utf8");
+        res.type("text/javascript");
+        res.send(data);
+    } catch(err) {
+        console.error(err);
+        res.status(500).send("Internal Server Error");
+    }
 })
 
 app.post('/shorten', async (req, res) => {
@@ -83,15 +79,14 @@ app.get('/:shortUrl', async (req, res) => {
     const url = await searchUrl(shortUrl);
 
     if (url === "Not Found") {
-        readFile("../Front/404.html", "utf8", (err, data) => {
-            if (err) {
-                // console.error(err);
-                res.status(500).send("Internal Server Error");
-            } else {
-                res.type("html");
-                res.status(404).send(data);
-            }
-        })
+        try {
+            const data = await readFile("../Front/404.html", "utf8");
+            res.type("html");
+            res.send(data);
+        } catch(err) {
+            console.error(err);
+            res.status(500).send("Internal Server Error");
+        }
     }
     else
         res.redirect(url);

@@ -24,21 +24,16 @@ async function searchUrl(shorturl) {
 
     try {
         // getting the db object  
-        const db = getDatabase();
 
         // getting 'url' collections 
-        const collection = db.collection('url');
+        const collection = getDatabase().collection('url');
 
         // finding a url object if exists in db 
         const result = await collection.findOne({ shorturl });
     
         // if found return the actual url 
-        if(result !== null) {
-            return result.url;
-        }
-        else {
-            return "Not Found";
-        }
+        return result ? result.url : "Not Found";
+
     } catch (error) {
         console.error(error);
         return null;
@@ -50,10 +45,8 @@ async function searchUrl(shorturl) {
 async function storeUrl(url) {
 
     try {
-        const db = getDatabase();
-
         // accessing 'url' collections 
-        const collection = db.collection('url');
+        const collection = getDatabase().collection('url');
 
         // finding a url object if exists in db 
         const existingUrl = await collection.findOne({ url });

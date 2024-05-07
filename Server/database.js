@@ -22,7 +22,7 @@ async function connect(retryCount, maxRetries) {
             const delay = Math.pow(2, retryCount) * 1000; 
             console.error(`Error connecting to MongoDB, retrying in ${delay / 1000} seconds...`, error.message);
             await new Promise(resolve => setTimeout(resolve, delay));
-            return connectToMongoDB(retryCount + 1, maxRetries);
+            return connect(retryCount + 1, maxRetries);
           } else {
             console.error('Maximum number of retries reached, unable to connect to MongoDB:', error.message);
             // throw error;
