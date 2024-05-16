@@ -1,5 +1,7 @@
-require("dotenv").config();
-const { MongoClient } = require('mongodb');
+import dotconfig from "dotenv"
+dotconfig.config();
+// const { MongoClient } = require('mongodb');
+import { MongoClient } from 'mongodb';
 
 // loading the MONGO_URI environment variable
 const uri = `${process.env.MONGO_URI}`;
@@ -41,7 +43,7 @@ function getDatabase() {
     return client.db('urls');
 }
 
-module.exports = {
+export {
     connect,
     getClient,
     getDatabase

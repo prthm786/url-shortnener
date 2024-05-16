@@ -1,22 +1,24 @@
-const express = require("express");
-const { readFile } = require("fs").promises;
-require("dotenv").config();
+import express, { json, urlencoded } from "express";
+import { promises } from "fs";
+const { readFile } = promises;
+import dotconfig from "dotenv"
+dotconfig.config();
 
-const { connect } = require("./database");
+import { connect } from "./database.js";
 
 // creating a connection to mongodb
 connect(1, 5);
 
 // Importing the util functions
-const { storeUrl, searchUrl } = require("./utils");
+import { storeUrl, searchUrl } from "./utils.js";
 
 const app = express();
 
 const port = process.env.PORT;
 
 // Setting up middlewares to be able to read `req.body`
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(json());
+app.use(urlencoded({ extended: true }));
 
 app.get("/", async function (req, res) {
     try {

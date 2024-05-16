@@ -1,4 +1,5 @@
-const { getDatabase } = require("./database")
+// const { getDatabase } = require("./database")
+import { getDatabase } from "./database.js";
 
 // function that uses a-z, A-Z, 0-9, 
 // &, -, _, +, to create a string from 5 char to 13 chars in length
@@ -23,8 +24,6 @@ async function searchUrl(shorturl) {
     }
 
     try {
-        // getting the db object  
-
         // getting 'url' collections 
         const collection = getDatabase().collection('url');
 
@@ -84,7 +83,7 @@ async function storeUrl(url) {
     }
 }
 
-module.exports = {
+export {
     storeUrl,
     searchUrl
 };
